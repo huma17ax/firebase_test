@@ -16,11 +16,9 @@ firebase.analytics();
 
 var database = firebase.database().ref()
 
-$('text-input').keypress(function (e) {
-    if (e.keyCode == 13) {
-        let mes = $('text_input').val()
-        database.push({message: mes})
-        console.log('push')
-        $('text-input').val('')
-    }
-})
+function sendToDB() {
+    const inputbox = document.getElementById('text-input')
+    database.push({message: inputbox.value})
+    console.log('push')
+    inputbox.value = ''
+}
