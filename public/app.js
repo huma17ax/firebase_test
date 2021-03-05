@@ -22,3 +22,10 @@ function sendToDB() {
     console.log('push')
     inputbox.value = ''
 }
+
+database.on('child_added', function (snapshot) {
+    const val = snapshot.val()
+    console.log(val)
+    const message = document.getElementById('message')
+    message.innerHTML = val.message
+})
