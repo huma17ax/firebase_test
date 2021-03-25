@@ -14,13 +14,14 @@ var firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 firebase.analytics();
 
-var database = firebase.database().ref()
+var database = firebase.database().ref('test/sample')
 
 function sendToDB() {
     const inputbox = document.getElementById('text-input')
     database.push({message: inputbox.value})
     console.log('push')
     inputbox.value = ''
+    database.child('test_child').set({testArray: [0,1,2,3,4]})
 }
 
 database.on('child_added', function (snapshot) {
@@ -29,3 +30,51 @@ database.on('child_added', function (snapshot) {
     const message = document.getElementById('message')
     message.innerHTML = val.message
 })
+
+function login() {
+    console.log('login')
+    firebase.auth().signInAnonymously()
+        .then(() => {
+            console.log('signin success')
+        })
+        .catch((error) => {
+            console.log(error)
+        })
+}
+
+firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+        console.log(user)
+        const authInfo = document.getElementById('authInfo')
+        authInfo.innerHTML = user.uid
+    }
+})
+
+function logout() {
+    console.log('logout')
+    firebase.auth().signOut()
+        .then(() => {
+            console.log('signout success')
+            document.getElementById('authInfo').innerHTML = ''
+        })
+        .catch((error) => {
+            console.log(error)
+        })
+}
+
+function userDelete() {
+    console.log('user delete')
+    const user = firebase.auth().currentUser
+    if (!user) {
+        console.log('error!!!  you didnot signin.')
+        return
+    }
+    user.delete()
+        .then(() => {
+            console.log('user delete success')
+            document.getElementById('authInfo').innerHTML = ''
+        })
+        .catch((error) => {
+            console.log(error)
+        })
+}
